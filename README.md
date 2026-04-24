@@ -112,12 +112,32 @@ pip install PyOpenGL PyOpenGL_accelerate
 
 ### Run Programs
 
-```
+## ▶️ How to Run
+
+### Run Lab-01
+
+```bash
 python Lab-01/Lab01_DDA_Bresenham.py
+```
+
+### Run Lab-02
+
+```bash
 python Lab-02/Lab02_OpenGL_Shapes.py
+```
+
+### Run Lab-03
+
+```bash
 python Lab-03/Lab03_DDA_Bresenham_Circle.py
+```
+
+### Run Lab-04
+
+```bash
 python Lab-04/Lab04_Boundary_Fill.py
 ```
+
 
 ---
 
