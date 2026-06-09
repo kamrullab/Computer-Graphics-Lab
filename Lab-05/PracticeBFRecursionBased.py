@@ -11,7 +11,7 @@ sys.setrecursionlimit(1000000)
 # 2 = filled
 inside_points = []
 
-# Create grid in simple C-style Python
+# Create grid
 grid = []
 for i in range(SIZE):
     row = []
@@ -23,7 +23,7 @@ for i in range(SIZE):
 # -----------------------------------
 # Convert window coordinate to grid coordinate
 # Window: origin bottom-left
-# Grid:   origin top-left
+# Grid: origin top-left
 # -----------------------------------
 def window_to_grid(x, y):
     grid_x = x
@@ -43,25 +43,25 @@ def draw_boundary(points):
 
 # -----------------------------------
 # Recursive Boundary Fill
-# x, y are window coordinates
 # -----------------------------------
 def boundary_fill(x, y):
-    # Step 1: outside window
+
+    # Outside window
     if x < 0 or x >= SIZE or y < 0 or y >= SIZE:
         return
 
-    # Convert window coordinate to grid coordinate
+    # Convert coordinate
     gx, gy = window_to_grid(x, y)
 
-    # Step 2: stop if boundary or already filled
+    # Stop if boundary or already filled
     if grid[gy][gx] == 1 or grid[gy][gx] == 2:
         return
 
-    # Step 3: fill current point
+    # Fill current point
     grid[gy][gx] = 2
-    inside_points.append((x, y))   # store window coordinate for drawing
+    inside_points.append((x, y))
 
-    # Step 4: recursively visit 4-neighbors
+    # Visit neighbors
     boundary_fill(x + 1, y)   # right
     boundary_fill(x - 1, y)   # left
     boundary_fill(x, y + 1)   # up
@@ -78,6 +78,7 @@ def DDA(x1, y1, x2, y2):
     dy = y2 - y1
 
     steps = max(abs(dx), abs(dy))
+
     if steps == 0:
         return [(x1, y1)]
 
@@ -89,6 +90,7 @@ def DDA(x1, y1, x2, y2):
 
     for i in range(steps + 1):
         points.append((round(x), round(y)))
+
         x += x_inc
         y += y_inc
 
@@ -96,9 +98,10 @@ def DDA(x1, y1, x2, y2):
 
 
 # -----------------------------------
-# Reset grid
+# Reset Grid
 # -----------------------------------
 def reset_grid():
+
     inside_points.clear()
 
     for i in range(SIZE):
@@ -110,30 +113,34 @@ def reset_grid():
 # Display
 # -----------------------------------
 def show():
+
     glClear(GL_COLOR_BUFFER_BIT)
 
     reset_grid()
 
-    # Triangle vertices in window coordinates
+    # Triangle vertices
     A = (100, 100)
     B = (300, 120)
     C = (180, 300)
 
-    # Get boundary points
+    # Triangle boundary
     points1 = DDA(A[0], A[1], B[0], B[1])
     points2 = DDA(B[0], B[1], C[0], C[1])
     points3 = DDA(C[0], C[1], A[0], A[1])
 
     boundary_points = points1 + points2 + points3
 
-    # Mark boundary in grid
+    # Mark boundary
     draw_boundary(boundary_points)
 
-    # Draw triangle boundary using window coordinates
+    # Draw boundary
     glColor3f(1.0, 1.0, 1.0)   # white
+
     glBegin(GL_POINTS)
+
     for x, y in boundary_points:
         glVertex2i(x, y)
+
     glEnd()
 
     # Seed point (centroid)
@@ -143,11 +150,14 @@ def show():
     # Fill inside
     boundary_fill(seed_x, seed_y)
 
-    # Draw filled pixels using window coordinates
+    # Draw filled area
     glColor3f(1.0, 0.0, 0.0)   # red
+
     glBegin(GL_POINTS)
+
     for x, y in inside_points:
         glVertex2i(x, y)
+
     glEnd()
 
     glutSwapBuffers()
@@ -157,10 +167,22 @@ def show():
 # Main
 # -----------------------------------
 glutInit()
+
 glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE)
+
 glutInitWindowSize(500, 500)
-glutCreateWindow(b"Boundary Fill Triangle")
+
+# Window title
+glutCreateWindow(b"Kamrul-43")
+
+# Background color
 glClearColor(0.0, 0.0, 0.0, 1.0)
+
+# 2D Coordinate system
 gluOrtho2D(0, 500, 0, 500)
+
+# Display callback
 glutDisplayFunc(show)
+
+# Start program
 glutMainLoop()
